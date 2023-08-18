@@ -144,7 +144,36 @@
                         Command="{Binding RunCodeCommand}"/>
 
             </Grid>
-            <TextBox Text="{Binding SourceCode}" 
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- TextBlock for line numbers -->
+                <Border Grid.Column="0" Background="#282828">
+                    <StackPanel>
+                        <TextBlock Name="lineNumbers" VerticalAlignment="Top" HorizontalAlignment="Right" Padding="5"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- TextBox for text input -->
+                <TextBox Text="{Binding SourceCode}" 
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged"
+                         x:Name="textBox"
+                         PreviewKeyDown="TextBox_PreviewKeyDown"
+                         DataObject.Pasting="TextBox_Pasting"
+                         DockPanel.Dock="Left" 
+                         Width="350"  
+                         Margin="0 0 10 0" 
+                         Background="#282828" 
+                         Foreground="White"
+                         BorderBrush="#4daffe"
+                         TextWrapping="Wrap" 
+                         VerticalScrollBarVisibility="Auto"/>
+            </Grid>
+            <!--<TextBox Text="{Binding SourceCode}" 
                      PreviewKeyDown="TextBox_PreviewKeyDown"
                      DataObject.Pasting="TextBox_Pasting"
                      DockPanel.Dock="Left" 
@@ -154,7 +183,7 @@
                      Foreground="White"
                      BorderBrush="#4daffe"
                      TextWrapping="Wrap" 
-                     VerticalScrollBarVisibility="Auto"/>
+                     VerticalScrollBarVisibility="Auto"/>-->
             <StackPanel>
                 <TextBlock Text="Output" 
                            Margin="10 10 10 0"

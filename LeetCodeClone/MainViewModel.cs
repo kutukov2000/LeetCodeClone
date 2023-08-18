@@ -30,7 +30,7 @@ namespace LeetCodeClone
             MemoryLimit = 262144;
             TimeLimit = 5;
         }
-        public void RunCode()
+        public async Task RunCode()
         {
             MessageBox.Show($"Source code {SourceCode}");
             RequestBody data = new RequestBody
@@ -40,9 +40,9 @@ namespace LeetCodeClone
                 MemoryLimit = MemoryLimit,
                 TimeLimit = TimeLimit
             };
-            string id = HackerEarth.Execute(data);
+            string id = await HackerEarth.ExecuteCodeAsync(data);
 
-            (string status, string output) = HackerEarth.GetStatus(id);
+            (string status, string output) = await HackerEarth.GetStatusAsync(id);
 
             switch (status)
             {
@@ -54,8 +54,8 @@ namespace LeetCodeClone
             }
             if (status == "AC")
             {
-                Result = HackerEarth.GetOutput(output);
-                HackerEarth.GetStats(id);
+                Result = await HackerEarth.GetOutputAsync(output);
+                await HackerEarth.GetStatsAsync(id);
             }
         }
     }

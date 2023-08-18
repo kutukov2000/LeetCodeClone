@@ -53,5 +53,28 @@ namespace LeetCodeClone
         {
             Close();
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateLineNumbers();
+
+        }
+        private void UpdateLineNumbers()
+        {
+            // Clear existing line numbers
+            lineNumbers.Text = string.Empty;
+
+            // Get the text from the TextBox
+            string text = textBox.Text;
+
+            // Count the number of lines
+            int lineCount = text.Split('\n').Length;
+
+            // Update the TextBlock with line numbers
+            for (int i = 1; i <= lineCount; i++)
+            {
+                lineNumbers.Text += i + "\n";
+            }
+        }
     }
 }

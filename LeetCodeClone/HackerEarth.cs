@@ -17,7 +17,7 @@ namespace LeetCodeClone
             _clientSecret = clientSecret;
         }
 
-        public string Execute(RequestBody data)
+        public async Task<string> ExecuteCodeAsync(RequestBody data)
         {
             using (var client = new HttpClient())
             {
@@ -26,15 +26,15 @@ namespace LeetCodeClone
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8);
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-                var response = client.PostAsync(_codeEvaluationURL, content).Result;
-                var responseContent = response.Content.ReadAsStringAsync().Result;
+                var response = await client.PostAsync(_codeEvaluationURL, content);
+                var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic responseObject = JObject.Parse(responseContent);
 
                 return responseObject.he_id;
             }
         }
-        public (string, string) GetStatus(string id)
+        public async Task<(string, string)> GetStatusAsync(string id)
         {
             using (var client = new HttpClient())
             {
@@ -56,7 +56,7 @@ namespace LeetCodeClone
                     {
                         MessageBox.Show($"{responseObject}");
                         Thread.Sleep(1500);
-                        GetStatus(id);
+                        GetStatusAsync(id);
                     }
                     else
                     {
@@ -67,26 +67,26 @@ namespace LeetCodeClone
                 return (null, null);
             }
         }
-        public void GetStats(string id)
+        public async Task GetStatsAsync(string id)
         {
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("client-secret", _clientSecret);
 
-                var response = client.GetAsync(_codeEvaluationURL + id).Result;
-                var responseContent = response.Content.ReadAsStringAsync().Result;
+                var response = await client.GetAsync(_codeEvaluationURL + id);
+                var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic responseObject = JObject.Parse(responseContent);
                 MessageBox.Show($"Memory used: {responseObject.result.run_status.memory_used} Kb\n" +
                                 $"Time used: {responseObject.result.run_status.time_used} s");
             }
         }
-        public string GetOutput(string outputURL)
+        public async Task<string> GetOutputAsync(string outputURL)
         {
             using (HttpClient client = new HttpClient())
             {
-                var response = client.GetAsync(outputURL).Result;
-                var content = response.Content.ReadAsStringAsync().Result;
+                var response = await client.GetAsync(outputURL);
+                var content = await response.Content.ReadAsStringAsync();
 
                 return content;
             }
