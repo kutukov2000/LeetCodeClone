@@ -6,7 +6,7 @@ namespace LeetCodeClone
     [AddINotifyPropertyChangedInterface]
     class MainViewModel
     {
-        private const string _clientSecret = "acc5789876823ef7de80d3a2dd8892bed9cc1b35";
+        private const string _clientSecret = "Put your client secret here";
         private HackerEarth HackerEarth { get; set; }
         public string SourceCode { get; set; }
 
