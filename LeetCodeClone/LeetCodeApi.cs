@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using System.Windows;
 
 namespace LeetCodeClone
 {
@@ -54,7 +53,6 @@ namespace LeetCodeClone
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic jsonResponse = JObject.Parse(responseContent);
-                MessageBox.Show($"JObject.Parse(responseContent) \n{jsonResponse.data.question.content}");
 
                 return jsonResponse.data.question.content;
             }

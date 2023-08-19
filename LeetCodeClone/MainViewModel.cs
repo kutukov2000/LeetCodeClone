@@ -1,5 +1,4 @@
 ﻿using PropertyChanged;
-using System.IO;
 using System.Windows;
 
 namespace LeetCodeClone
@@ -24,13 +23,20 @@ namespace LeetCodeClone
         public OutputStats OutputStats { get; set; }
         public RelayCommand RunCodeCommand { get; set; }
         public List<Problem> Problems { get; set; }
-        public Problem SelectedProblem { get; set; }
-        public string SelectedProblemDescription { get; set; }
-        public Uri Description { get; set; }
+        private Problem _selectedProblem;
+
+        public Problem SelectedProblem
+        {
+            get { return _selectedProblem; }
+            set
+            {
+                _selectedProblem = value;
+                LoadSelectedProblemAsync();
+            }
+        }
+
         public MainViewModel()
         {
-            SelectedProblemDescription = "<p>Hello kurwa</p>";
-
             HackerEarth = new HackerEarth(_clientSecret);
             RunCodeCommand = new RelayCommand(o => { RunCode(); });
 
@@ -46,16 +52,23 @@ namespace LeetCodeClone
 
             GetProblems();
         }
+        public async Task LoadSelectedProblemAsync()
+        {
+            SelectedProblem.Description = await LeetCode.GetProblemDetailAsync(SelectedProblem.QuestionTitleSlug);
+
+            if (string.IsNullOrEmpty(SelectedProblem.Description))
+            {
+                SelectedProblem.Description = "Is paid only problem";
+            }
+        }
         public async Task GetProblems()
         {
             Problems = await LeetCode.GetProblemsAsync();
-
-            SelectedProblemDescription = await LeetCode.GetProblemDetailAsync(Problems[121].QuestionTitleSlug);
-
-            Description = SaveStringAsHtml(SelectedProblemDescription, "description.html");
+            SelectedProblem = Problems[121];
         }
         public async Task RunCode()
         {
+            MessageBox.Show("We run code");
             RequestBody data = new RequestBody
             {
                 Lang = SelectedLanguage,
@@ -65,8 +78,6 @@ namespace LeetCodeClone
                 Input = "15"
             };
             string id = await HackerEarth.ExecuteCodeAsync(data);
-
-            //(string status, string output) = await HackerEarth.GetStatusAsync(id);
 
             while (true)
             {
@@ -95,19 +106,6 @@ namespace LeetCodeClone
             //    case "RE": MessageBox.Show($"FAIL.\nOutput string: {output}"); break;
             //    default: break;
             //}
-        }
-        public Uri SaveStringAsHtml(string content, string filePath)
-        {
-            try
-            {
-                File.WriteAllText(filePath, content);
-                Console.WriteLine("String saved as HTML file successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred while saving the HTML file: " + ex.Message);
-            }
-            return new Uri(filePath);
         }
     }
 }
