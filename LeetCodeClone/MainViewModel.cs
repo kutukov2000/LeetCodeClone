@@ -6,7 +6,7 @@ namespace LeetCodeClone
     [AddINotifyPropertyChangedInterface]
     class MainViewModel
     {
-        private const string _clientSecret = "Put your client secret here";
+        private const string _clientSecret = "Put your secret key here ";
         private HackerEarth HackerEarth { get; set; }
         private LeetCodeApi LeetCode { get; set; }
 
@@ -16,6 +16,7 @@ namespace LeetCodeClone
         public string ExecuteStatus { get; set; }
         public string[] Languages { get; }
         public string SelectedLanguage { get; set; }
+        public string Input { get; set; }
         public string Result { get; set; }
 
         public int MemoryLimit { get; set; }
@@ -75,7 +76,7 @@ namespace LeetCodeClone
                 Source = SourceCode,
                 MemoryLimit = MemoryLimit,
                 TimeLimit = TimeLimit,
-                Input = "15"
+                Input = Input
             };
             string id = await HackerEarth.ExecuteCodeAsync(data);
 

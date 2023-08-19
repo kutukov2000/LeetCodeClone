@@ -49,7 +49,7 @@ namespace LeetCodeClone
                 var requestDataString = JsonConvert.SerializeObject(requestData);
                 var content = new StringContent(requestDataString, System.Text.Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync("https://leetcode.com/graphql", content);
+                var response = await client.PostAsync(_GraphQLEndpoint, content);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic jsonResponse = JObject.Parse(responseContent);

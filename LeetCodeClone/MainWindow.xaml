@@ -54,12 +54,13 @@
         <Style x:Key="InputTextBox" TargetType="TextBox">
             <Setter Property="BorderBrush" Value="#4daffe"/>
             <Setter Property="BorderThickness" Value="0.5"/>
-            <Setter Property="Height" Value="25"/>
+            <Setter Property="Height" Value="20"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="#3d3d3d"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="5 0 5 0"/>
             <Setter Property="Margin" Value="5 0 0 0"/>
+            <Setter Property="Padding" Value="5 0 5 0"/>
         </Style>
         <Style TargetType="GridViewColumnHeader">
             <Setter Property="Height" Value="0"/>
@@ -183,7 +184,9 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{Binding ExecuteStatus}"
-                           HorizontalAlignment="Left"/>
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Margin="10 0 0 0"/>
                 <Button Width="60"
                         HorizontalAlignment="Right"
                         Content="RUN"
@@ -306,11 +309,19 @@
                     <TextBlock Text="Output" 
                                Margin="10 10 10 0"
                                Foreground="White"/>
-                    <TextBlock DockPanel.Dock="Right"
-                               Margin="10"
+                    <TextBlock Margin="10"
+                               Height="210"
                                Background="#282828" 
                                Foreground="White"
                                Text="{Binding Result, Mode=TwoWay}"/>
+
+                    <TextBlock Text="Input" 
+                               Margin="10 10 10 0"
+                               Foreground="White"/>
+                    <TextBox Margin="10"
+                             Background="#282828" 
+                             Foreground="White"
+                             Text="{Binding Result, Mode=TwoWay}"/>
                 </StackPanel>
             </Grid>
         </DockPanel>
