@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.IO;
 using System.Net.Http;
 using System.Text;
-using System.Windows;
 
 namespace LeetCodeClone
 {
@@ -34,40 +32,29 @@ namespace LeetCodeClone
                 return responseObject.he_id;
             }
         }
-        public async Task<(string, string)> GetStatusAsync(string id)
+        public async Task<string> GetStatusAsync(string id)
         {
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("client-secret", _clientSecret);
 
-                var response = client.GetAsync(_codeEvaluationURL + id).Result;
-                var responseContent = response.Content.ReadAsStringAsync().Result;
+                var response = await client.GetAsync(_codeEvaluationURL + id);
+                var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic responseObject = JObject.Parse(responseContent);
-                MessageBox.Show($"responseObject {responseObject}");
+
                 if (responseObject != null && responseObject.request_status != null)
                 {
                     if (responseObject.request_status.code == "REQUEST_FAILED" || responseObject.result.compile_status != "OK")
                     {
-                        MessageBox.Show("REQUEST_FAILED");
-                        return (null, null);
+                        return "REQUEST_FAILED";
                     }
-                    if (responseObject.request_status.code != "REQUEST_COMPLETED")
-                    {
-                        MessageBox.Show($"{responseObject}");
-                        Thread.Sleep(1500);
-                        GetStatusAsync(id);
-                    }
-                    else
-                    {
-                        MessageBox.Show($"Returned URI: {responseObject.result.run_status.output}");
-                        return (responseObject.result.run_status.status, responseObject.result.run_status.output);
-                    }
+                    return responseObject.request_status.code;
                 }
-                return (null, null);
+                return null;
             }
         }
-        public async Task GetStatsAsync(string id)
+        public async Task<OutputStats> GetStatsAsync(string id)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -77,8 +64,25 @@ namespace LeetCodeClone
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic responseObject = JObject.Parse(responseContent);
-                MessageBox.Show($"Memory used: {responseObject.result.run_status.memory_used} Kb\n" +
-                                $"Time used: {responseObject.result.run_status.time_used} s");
+                return new OutputStats
+                {
+                    MemoryUsed = responseObject.result.run_status.memory_used,
+                    TimeUsed = responseObject.result.run_status.time_used,
+                    DockPanelHeight = 40
+                };
+            }
+        }
+        public async Task<string> GetOutputStringAsync(string id)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("client-secret", _clientSecret);
+
+                var response = await client.GetAsync(_codeEvaluationURL + id);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                dynamic responseObject = JObject.Parse(responseContent);
+                return responseObject.result.run_status.output;
             }
         }
         public async Task<string> GetOutputAsync(string outputURL)
@@ -89,29 +93,6 @@ namespace LeetCodeClone
                 var content = await response.Content.ReadAsStringAsync();
 
                 return content;
-            }
-        }
-        public void GetOutputToFIle(string outputURL)
-        {
-            try
-            {
-                string fileName = "output.txt";
-                string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-
-                using (HttpClient client = new HttpClient())
-                {
-                    var response = client.GetAsync(outputURL).Result;
-                    var content = response.Content.ReadAsStringAsync().Result;
-
-                    File.WriteAllText(outputPath, content);
-
-                    Console.WriteLine("Successfully saved to file!");
-                    Console.WriteLine(content);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Помилка: {ex.Message}");
             }
         }
     }

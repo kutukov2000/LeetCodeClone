@@ -1,4 +1,5 @@
 ﻿using PropertyChanged;
+using System.IO;
 using System.Windows;
 
 namespace LeetCodeClone
@@ -8,19 +9,28 @@ namespace LeetCodeClone
     {
         private const string _clientSecret = "Put your client secret here";
         private HackerEarth HackerEarth { get; set; }
-        public string SourceCode { get; set; }
+        private LeetCodeApi LeetCode { get; set; }
 
+        public string LineNumbers { get; set; }
+
+        public string SourceCode { get; set; }
+        public string ExecuteStatus { get; set; }
         public string[] Languages { get; }
         public string SelectedLanguage { get; set; }
         public string Result { get; set; }
 
         public int MemoryLimit { get; set; }
         public int TimeLimit { get; set; }
-
+        public OutputStats OutputStats { get; set; }
         public RelayCommand RunCodeCommand { get; set; }
-
+        public List<Problem> Problems { get; set; }
+        public Problem SelectedProblem { get; set; }
+        public string SelectedProblemDescription { get; set; }
+        public Uri Description { get; set; }
         public MainViewModel()
         {
+            SelectedProblemDescription = "<p>Hello kurwa</p>";
+
             HackerEarth = new HackerEarth(_clientSecret);
             RunCodeCommand = new RelayCommand(o => { RunCode(); });
 
@@ -29,34 +39,75 @@ namespace LeetCodeClone
 
             MemoryLimit = 262144;
             TimeLimit = 5;
+
+            OutputStats = new OutputStats();
+
+            LeetCode = new LeetCodeApi();
+
+            GetProblems();
+        }
+        public async Task GetProblems()
+        {
+            Problems = await LeetCode.GetProblemsAsync();
+
+            SelectedProblemDescription = await LeetCode.GetProblemDetailAsync(Problems[121].QuestionTitleSlug);
+
+            Description = SaveStringAsHtml(SelectedProblemDescription, "description.html");
         }
         public async Task RunCode()
         {
-            MessageBox.Show($"Source code {SourceCode}");
             RequestBody data = new RequestBody
             {
                 Lang = SelectedLanguage,
                 Source = SourceCode,
                 MemoryLimit = MemoryLimit,
-                TimeLimit = TimeLimit
+                TimeLimit = TimeLimit,
+                Input = "15"
             };
             string id = await HackerEarth.ExecuteCodeAsync(data);
 
-            (string status, string output) = await HackerEarth.GetStatusAsync(id);
+            //(string status, string output) = await HackerEarth.GetStatusAsync(id);
 
-            switch (status)
+            while (true)
             {
-                case "AC": MessageBox.Show($"Accepted. The code executed successfully.\nOutput string: {output}"); break;
-                case "MLE": MessageBox.Show($"Memory Limit Exceeded.\nOutput string: {output}"); break;
-                case "TLE": MessageBox.Show($"Time Limit Exceeded.\nOutput string: {output}"); break;
-                case "RE": MessageBox.Show($"FAIL.\nOutput string: {output}"); break;
-                default: break;
+                ExecuteStatus = await HackerEarth.GetStatusAsync(id);
+                if (ExecuteStatus == "REQUEST_INITIATED" || ExecuteStatus == "REQUEST_QUEUED" || ExecuteStatus == "CODE_COMPILED")
+                    continue;
+                else if (ExecuteStatus == "REQUEST_FAILED")
+                {
+                    MessageBox.Show("REQUEST_FAILED");
+                    break;
+                }
+                else if (ExecuteStatus == "REQUEST_COMPLETED")
+                {
+                    string output = await HackerEarth.GetOutputStringAsync(id);
+                    Result = await HackerEarth.GetOutputAsync(output);
+                    OutputStats = await HackerEarth.GetStatsAsync(id);
+                    break;
+                }
             }
-            if (status == "AC")
+
+            //switch (status)
+            //{
+            //    case "AC": MessageBox.Show($"Accepted. The code executed successfully.\nOutput string: {output}"); break;
+            //    case "MLE": MessageBox.Show($"Memory Limit Exceeded.\nOutput string: {output}"); break;
+            //    case "TLE": MessageBox.Show($"Time Limit Exceeded.\nOutput string: {output}"); break;
+            //    case "RE": MessageBox.Show($"FAIL.\nOutput string: {output}"); break;
+            //    default: break;
+            //}
+        }
+        public Uri SaveStringAsHtml(string content, string filePath)
+        {
+            try
             {
-                Result = await HackerEarth.GetOutputAsync(output);
-                await HackerEarth.GetStatsAsync(id);
+                File.WriteAllText(filePath, content);
+                Console.WriteLine("String saved as HTML file successfully.");
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while saving the HTML file: " + ex.Message);
+            }
+            return new Uri(filePath);
         }
     }
 }
