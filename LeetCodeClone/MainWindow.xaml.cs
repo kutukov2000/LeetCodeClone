@@ -57,11 +57,6 @@ namespace LeetCodeClone
             e.CancelCommand();
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
         //Sync scroll
         private void textBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {

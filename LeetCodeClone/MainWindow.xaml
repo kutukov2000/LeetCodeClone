@@ -24,12 +24,7 @@
             CornerRadius="8"
             Padding="5">
         <DockPanel>
-            <Grid DockPanel.Dock="Top">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="12*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel DockPanel.Dock="Top"
+            <StackPanel DockPanel.Dock="Top"
                             Background="#1f1f1f"
                             Orientation="Horizontal">
                     <DockPanel>
@@ -70,23 +65,18 @@
                         </TextBox>
                     </DockPanel>
                 </StackPanel>
-                <DockPanel Grid.Column="1"
-                           HorizontalAlignment="Right">
-                    <Button Width="30" 
-                            Height="30"
-                            Margin="10 10 15 10"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource CloseButton}" 
-                            Click="CloseButton_Click">
-                        <Button.RenderTransform>
-                            <ScaleTransform/>
-                        </Button.RenderTransform>
-                        <Image Source="cross.png" 
-                               Stretch="UniformToFill"/>
-                    </Button>
-                </DockPanel>
-            </Grid>
-
+                <!--<Button Width="30" 
+        Height="30"
+        Margin="10 10 15 10"
+        DockPanel.Dock="Right"
+        Style="{StaticResource CloseButton}" 
+        Click="CloseButton_Click">
+                <Button.RenderTransform>
+                    <ScaleTransform/>
+                </Button.RenderTransform>
+                <Image Source="cross.png" 
+           Stretch="UniformToFill"/>
+            </Button>-->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
