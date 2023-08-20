@@ -6,13 +6,23 @@ namespace LeetCodeClone
     [AddINotifyPropertyChangedInterface]
     class MainViewModel
     {
-        private const string _clientSecret = "Put your secret key here ";
+        private const string _clientSecret = "acc5789876823ef7de80d3a2dd8892bed9cc1b35 ";
         private HackerEarth HackerEarth { get; set; }
         private LeetCodeApi LeetCode { get; set; }
 
         public string LineNumbers { get; set; }
 
-        public string SourceCode { get; set; }
+        private string _sourceCode;
+        public string SourceCode
+        {
+            get { return _sourceCode; }
+            set
+            {
+                _sourceCode = value;
+                UpdateLineNumbers();
+            }
+        }
+
         public string ExecuteStatus { get; set; }
         public string[] Languages { get; }
         public string SelectedLanguage { get; set; }
@@ -23,9 +33,11 @@ namespace LeetCodeClone
         public int TimeLimit { get; set; }
         public OutputStats OutputStats { get; set; }
         public RelayCommand RunCodeCommand { get; set; }
+        public RelayCommand SourceCodeTextChanged { get; set; }
+        public RelayCommand PreviewKeyDownCommand { get; set; }
         public List<Problem> Problems { get; set; }
-        private Problem _selectedProblem;
 
+        private Problem _selectedProblem;
         public Problem SelectedProblem
         {
             get { return _selectedProblem; }
@@ -41,6 +53,9 @@ namespace LeetCodeClone
             HackerEarth = new HackerEarth(_clientSecret);
             RunCodeCommand = new RelayCommand(o => { RunCode(); });
 
+            LineNumbers = "1";
+            SourceCode = "";
+
             Languages = new string[] { "C", "CPP14", "CPP17", "CLOJURE", "CSHARP", "GO", "HASKELL", "JAVA8", "JAVA14", "JAVASCRIPT_NODE", "KOTLIN", "OBJECTIVEC", "PASCAL", "PERL", "PHP", "PYTHON", "PYTHON3", "PYTHON3_8", "R", "RUBY", "RUST", "SCALA", "SWIFT", "TYPESCRIPT" };
             SelectedLanguage = Languages[17];
 
@@ -53,13 +68,29 @@ namespace LeetCodeClone
 
             GetProblems();
         }
+        private void UpdateLineNumbers()
+        {
+            if (string.IsNullOrEmpty(SourceCode))
+            {
+                return;
+            }
+            LineNumbers = string.Empty;
+
+            int lineCount = SourceCode.Split('\n').Length;
+
+            for (int i = 1; i <= lineCount; i++)
+            {
+                LineNumbers += i + "\n";
+            }
+        }
         public async Task LoadSelectedProblemAsync()
         {
+
             SelectedProblem.Description = await LeetCode.GetProblemDetailAsync(SelectedProblem.QuestionTitleSlug);
 
-            if (string.IsNullOrEmpty(SelectedProblem.Description))
+            if (string.IsNullOrEmpty(SelectedProblem.Description) || string.IsNullOrWhiteSpace(SelectedProblem.Description))
             {
-                SelectedProblem.Description = "Is paid only problem";
+                SelectedProblem.Description = @"<p>Is paid only problem</p>";
             }
         }
         public async Task GetProblems()
@@ -69,7 +100,6 @@ namespace LeetCodeClone
         }
         public async Task RunCode()
         {
-            MessageBox.Show("We run code");
             RequestBody data = new RequestBody
             {
                 Lang = SelectedLanguage,
@@ -95,18 +125,18 @@ namespace LeetCodeClone
                     string output = await HackerEarth.GetOutputStringAsync(id);
                     Result = await HackerEarth.GetOutputAsync(output);
                     OutputStats = await HackerEarth.GetStatsAsync(id);
+
+                    if (OutputStats.MemoryUsed > MemoryLimit)
+                    {
+                        MessageBox.Show("Memory Limit Exceeded");
+                    }
+                    if (OutputStats.TimeUsed > TimeLimit)
+                    {
+                        MessageBox.Show("Time Limit Exceeded");
+                    }
                     break;
                 }
             }
-
-            //switch (status)
-            //{
-            //    case "AC": MessageBox.Show($"Accepted. The code executed successfully.\nOutput string: {output}"); break;
-            //    case "MLE": MessageBox.Show($"Memory Limit Exceeded.\nOutput string: {output}"); break;
-            //    case "TLE": MessageBox.Show($"Time Limit Exceeded.\nOutput string: {output}"); break;
-            //    case "RE": MessageBox.Show($"FAIL.\nOutput string: {output}"); break;
-            //    default: break;
-            //}
         }
     }
 }

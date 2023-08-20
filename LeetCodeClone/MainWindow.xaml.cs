@@ -11,7 +11,8 @@ namespace LeetCodeClone
             InitializeComponent();
         }
 
-        //Press Enter key add a new line to code textbox
+        // Enter -> NewLine
+        // Tab   -> tab("    ")
         private void TextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -22,8 +23,15 @@ namespace LeetCodeClone
                 textBox.Text = textBox.Text.Insert(caretIndex, Environment.NewLine);
                 textBox.CaretIndex = caretIndex + Environment.NewLine.Length;
             }
+            if (e.Key == Key.Tab)
+            {
+                e.Handled = true;
+                TextBox textBox = (TextBox)sender;
+                int caretIndex = textBox.CaretIndex;
+                textBox.Text = textBox.Text.Insert(caretIndex, "    ");
+                textBox.CaretIndex = caretIndex + 4;
+            }
         }
-
 
         //Allow to paste multyline code in code textbox
         private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
@@ -52,24 +60,6 @@ namespace LeetCodeClone
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateLineNumbers();
-        }
-        private void UpdateLineNumbers()
-        {
-            lineNumbers.Text = string.Empty;
-
-            string text = textBox.Text;
-
-            int lineCount = text.Split('\n').Length;
-
-            for (int i = 1; i <= lineCount; i++)
-            {
-                lineNumbers.Text += i + "\n";
-            }
         }
 
         //Sync scroll

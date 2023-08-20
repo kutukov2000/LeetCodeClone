@@ -8,7 +8,6 @@ namespace LeetCodeClone
     {
         private const string _URI = "https://leetcode.com/api/problems/all/";
         private const string _GraphQLEndpoint = "https://leetcode.com/graphql";
-
         public async Task<string> GetProblemDetailAsync(string titleSlug)
         {
             using (var client = new HttpClient())
@@ -54,7 +53,16 @@ namespace LeetCodeClone
 
                 dynamic jsonResponse = JObject.Parse(responseContent);
 
-                return jsonResponse.data.question.content;
+                string htmlStart = @"<!DOCTYPE html><html><head><style>
+                                  body {
+                                    background-color:#3a3a3a;
+                                    color: white;
+                                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                  }
+                                </style></head><body>";
+                string htmlEnd = "</body></html>";
+
+                return htmlStart + jsonResponse.data.question.content + htmlEnd;
             }
         }
 
