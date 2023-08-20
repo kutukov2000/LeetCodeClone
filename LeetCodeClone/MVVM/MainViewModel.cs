@@ -12,10 +12,10 @@ namespace LeetCodeClone
 
         public string LineNumbers { get; set; }
 
-        private string _sourceCode;
+        private string? _sourceCode;
         public string SourceCode
         {
-            get { return _sourceCode; }
+            get => _sourceCode;
             set
             {
                 _sourceCode = value;
@@ -23,24 +23,22 @@ namespace LeetCodeClone
             }
         }
 
-        public string ExecuteStatus { get; set; }
+        public string? ExecuteStatus { get; set; }
         public string[] Languages { get; }
         public string SelectedLanguage { get; set; }
-        public string Input { get; set; }
-        public string Result { get; set; }
+        public string? Input { get; set; }
+        public string? Result { get; set; }
 
         public int MemoryLimit { get; set; }
         public int TimeLimit { get; set; }
-        public OutputStats OutputStats { get; set; }
+        public OutputStats? OutputStats { get; set; }
         public RelayCommand RunCodeCommand { get; set; }
-        public RelayCommand SourceCodeTextChanged { get; set; }
-        public RelayCommand PreviewKeyDownCommand { get; set; }
-        public List<Problem> Problems { get; set; }
+        public List<Problem>? Problems { get; set; }
 
-        private Problem _selectedProblem;
+        private Problem? _selectedProblem;
         public Problem SelectedProblem
         {
-            get { return _selectedProblem; }
+            get => _selectedProblem;
             set
             {
                 _selectedProblem = value;
@@ -51,20 +49,17 @@ namespace LeetCodeClone
         public MainViewModel()
         {
             HackerEarth = new HackerEarth(_clientSecret);
+            LeetCode = new LeetCodeApi();
+
             RunCodeCommand = new RelayCommand(o => { RunCode(); });
 
-            LineNumbers = "1";
-            SourceCode = "";
 
             Languages = new string[] { "C", "CPP14", "CPP17", "CLOJURE", "CSHARP", "GO", "HASKELL", "JAVA8", "JAVA14", "JAVASCRIPT_NODE", "KOTLIN", "OBJECTIVEC", "PASCAL", "PERL", "PHP", "PYTHON", "PYTHON3", "PYTHON3_8", "R", "RUBY", "RUST", "SCALA", "SWIFT", "TYPESCRIPT" };
             SelectedLanguage = Languages[17];
 
             MemoryLimit = 262144;
             TimeLimit = 5;
-
-            OutputStats = new OutputStats();
-
-            LeetCode = new LeetCodeApi();
+            LineNumbers = "1";
 
             GetProblems();
         }
@@ -100,6 +95,9 @@ namespace LeetCodeClone
         }
         public async Task RunCode()
         {
+            OutputStats = new OutputStats();
+            ExecuteStatus = string.Empty;
+
             RequestBody data = new RequestBody
             {
                 Lang = SelectedLanguage,

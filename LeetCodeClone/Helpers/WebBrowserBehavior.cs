@@ -19,8 +19,17 @@ namespace LeetCodeClone
             dependencyObject.SetValue(BodyProperty, body);
         }
 
-        private static void OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-         ((WebBrowser)d).NavigateToString((string)e.NewValue);
-    }
+        private static void OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is not null)
+            {
+                ((WebBrowser)d).NavigateToString((string)e.NewValue);
+            }
+            else
+            {
+                ((WebBrowser)d).NavigateToString(@"It`s paid only problem");
+            }
+        }
 
+    }
 }

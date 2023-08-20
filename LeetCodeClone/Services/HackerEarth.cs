@@ -43,15 +43,11 @@ namespace LeetCodeClone
 
                 dynamic responseObject = JObject.Parse(responseContent);
 
-                if (responseObject != null && responseObject.request_status != null)
+                if (responseObject.request_status.code == "REQUEST_FAILED" || responseObject.result.compile_status != "OK")
                 {
-                    if (responseObject.request_status.code == "REQUEST_FAILED" || responseObject.result.compile_status != "OK")
-                    {
-                        return "REQUEST_FAILED";
-                    }
-                    return responseObject.request_status.code;
+                    return "REQUEST_FAILED";
                 }
-                return null;
+                return responseObject.request_status.code;
             }
         }
         public async Task<OutputStats> GetStatsAsync(string id)

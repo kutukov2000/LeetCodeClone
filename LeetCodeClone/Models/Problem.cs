@@ -8,12 +8,6 @@ namespace LeetCodeClone
         public required string QuestionTitleSlug { get; set; }
         public required string QuestionTitle { get; set; }
         public int DifficultyLevel { get; set; }
-        public string Description { get; set; }
-        public bool IsPaidOnly { get; set; }
-
-        public override string ToString()
-        {
-            return $"{QuestionTitle} - {DifficultyLevel}";
-        }
+        public string? Description { get; set; }
     }
 }

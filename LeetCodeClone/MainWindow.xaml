@@ -8,7 +8,7 @@
         Title="MainWindow" 
         MinHeight="525"
         Height="525"
-        Width="925"
+        Width="950"
         WindowStartupLocation="CenterScreen"
         Background="#1a1a1a"
         Foreground="White"
@@ -23,206 +23,126 @@
             BorderThickness="5"
             CornerRadius="8"
             Padding="5">
-        <DockPanel>
-            <StackPanel DockPanel.Dock="Top"
-                            Background="#1f1f1f"
-                            Orientation="Horizontal">
-                    <DockPanel>
-                        <ComboBox Style="{DynamicResource ComboBoxStyle}" 
-                                  Margin="10" 
-                                  Height="30"
-                                  Padding="10 5 10 5"
-                                  Foreground="White"
-                                  VerticalAlignment="Center"
-                                  VerticalContentAlignment="Center"
-                                  ItemsSource="{Binding Languages}" 
-                                  SelectedItem="{Binding SelectedLanguage}">
-                            <ComboBox.Resources>
-                                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2d2d2d" />
-                            </ComboBox.Resources>
-                        </ComboBox>
-                        <TextBlock Text="Memory limit: "
-                                   VerticalAlignment="Center"
-                                   Margin="15 0 0 0"/>
-                        <TextBox Text="{Binding MemoryLimit, StringFormat={}{0} Kb}"
-                                 Style="{StaticResource InputTextBox}">
-                            <TextBox.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="2.5"/>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
-                        <TextBlock Text="Time limit: "
-                                   VerticalAlignment="Center"
-                                   Margin="15 0 0 0"/>
-                        <TextBox Text="{Binding TimeLimit, StringFormat={}{0} s}"
-                                 Style="{StaticResource InputTextBox}">
-                            <TextBox.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="2.5"/>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
-                    </DockPanel>
-                </StackPanel>
-                <!--<Button Width="30" 
-        Height="30"
-        Margin="10 10 15 10"
-        DockPanel.Dock="Right"
-        Style="{StaticResource CloseButton}" 
-        Click="CloseButton_Click">
-                <Button.RenderTransform>
-                    <ScaleTransform/>
-                </Button.RenderTransform>
-                <Image Source="cross.png" 
-           Stretch="UniformToFill"/>
-            </Button>-->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <TabControl Background="#1a1a1a"
-                            BorderThickness="0">
-                    <TabItem Header="Problems">
-                        <ListView ItemsSource="{Binding Problems}" 
-                                  SelectedItem="{Binding SelectedProblem, UpdateSourceTrigger=PropertyChanged}"
-                                  Background="#282828" 
-                                  ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding QuestionTitle}"/>
-                                    <GridViewColumn>
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Ellipse Width="15" 
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TabControl Background="#1a1a1a"
+                        BorderThickness="0"
+                        Margin="0 25 0 0">
+                <TabItem Header="Problems">
+                    <ListView ItemsSource="{Binding Problems}" 
+                              SelectedItem="{Binding SelectedProblem, UpdateSourceTrigger=PropertyChanged}"
+                              Background="#282828" 
+                              ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding QuestionTitle}"/>
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Ellipse Width="15" 
                                                          Height="15" 
                                                          Margin="25 0 0 0"
                                                          Fill="{Binding DifficultyLevel, Converter={StaticResource DifficultyLevelConverter}}" />
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
 
-                    </TabItem>
-                    <TabItem Header="Selected Problem">
-                        <WebBrowser local:WebBrowserBehavior.Body="{Binding SelectedProblem.Description}"/>
-                    </TabItem>
-                    <TabItem Header="Code" >
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                </TabItem>
+                <TabItem Header="Selected Problem">
+                    <WebBrowser local:WebBrowserBehavior.Body="{Binding SelectedProblem.Description}"/>
+                </TabItem>
+                <TabItem Header="Code" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <Border Background="#282828" 
-                                    CornerRadius="2.5 0 0 2.5"
-                                    Padding="2.5 2 2.5 2">
-                                <TextBox Name="lineNumbers" 
-                                         Text="{Binding LineNumbers}"
-                                         VerticalAlignment="Top" 
-                                         HorizontalAlignment="Right" 
-                                         Background="#282828" 
-                                         Foreground="White"
-                                         BorderThickness="0"
-                                         IsEnabled="False"
-                                         ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="2.5 0 0 2.5"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                </TextBox>
-                            </Border>
-                            <TextBox Text="{Binding SourceCode, UpdateSourceTrigger=PropertyChanged}" 
-                                     x:Name="textBox"
-                                     ScrollViewer.ScrollChanged="textBox_ScrollChanged"
-                                     PreviewKeyDown="TextBox_PreviewKeyDown"
-                                     DataObject.Pasting="TextBox_Pasting"
-                                     AcceptsTab="True"
-                                     Grid.Column="1"
-                                     Margin="0 0 10 0" 
-                                     Padding="2 2 0 0"
+                        <Border Background="#282828" 
+                                CornerRadius="2.5 0 0 2.5"
+                                Padding="2.5 2 2.5 2">
+                            <TextBox Name="lineNumbers" 
+                                     Text="{Binding LineNumbers}"
+                                     VerticalAlignment="Top" 
+                                     HorizontalAlignment="Right" 
                                      Background="#282828" 
                                      Foreground="White"
-                                     BorderBrush="#4daffe"
-                                     TextWrapping="Wrap" 
-                                     VerticalScrollBarVisibility="Auto">
+                                     BorderThickness="0"
+                                     IsEnabled="False"
+                                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="0 2.5 2.5 0"/>
+                                        <Setter Property="CornerRadius" Value="2.5 0 0 2.5"/>
                                     </Style>
                                 </TextBox.Resources>
                             </TextBox>
-                        </Grid>
-                    </TabItem>
-
-                </TabControl>
-
-                <StackPanel Grid.Column="1">
-                    <DockPanel>
-                        <Button Content="RUN"
-                                HorizontalAlignment="Left"
-                                Width="60"
-                                Height="30"
-                                Margin="10"
-                                Background="#4daffe"
-                                Foreground="White"
-                                BorderThickness="0"
-                                FontWeight="Bold"
-                                Command="{Binding RunCodeCommand}">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="2.5"/>
+                        </Border>
+                        <TextBox Text="{Binding SourceCode, UpdateSourceTrigger=PropertyChanged}" 
+                                 x:Name="textBox"
+                                 ScrollViewer.ScrollChanged="textBox_ScrollChanged"
+                                 PreviewKeyDown="TextBox_PreviewKeyDown"
+                                 DataObject.Pasting="TextBox_Pasting"
+                                 AcceptsTab="True"
+                                 Grid.Column="1"
+                                 Margin="0 0 10 0" 
+                                 Padding="2 2 0 0"
+                                 Background="#282828" 
+                                 Foreground="White"
+                                 BorderBrush="#4daffe"
+                                 TextWrapping="Wrap" 
+                                 VerticalScrollBarVisibility="Auto">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0 2.5 2.5 0"/>
                                 </Style>
-                            </Button.Resources>
-                        </Button>
-                        <DockPanel HorizontalAlignment="Right"
-                                   VerticalAlignment="Center" 
-                                   Height="{Binding OutputStats.DockPanelHeight}">
-                            <TextBlock Text="Memory used: "
-                                       Margin="10 10 5 10"/>
-                            <TextBlock Text="{Binding OutputStats.MemoryUsed, StringFormat={}{0} Kb}"
-                                       Margin="0 10 10 10"/>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </Grid>
+                </TabItem>
 
-                            <TextBlock Text="Time used: "
-                                       Margin="10 10 5 10"/>
-                            <TextBlock Text="{Binding OutputStats.TimeUsed, StringFormat={}{0} s}"
-                                       Margin="0 10 10 10"/>
+            </TabControl>
 
-                        </DockPanel>
-                    </DockPanel>
-                    <DockPanel>
-                        <TextBlock Text="Output" 
-                                   VerticalAlignment="Center"
-                                   Margin="10 10 10 0"
-                                   Foreground="White"/>
-                        <TextBlock Text="{Binding ExecuteStatus}"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Right"
-                                   Margin="0 0 10 0"/>
-                    </DockPanel>
-
-                    <ScrollViewer>
-                        <TextBlock Margin="10"
-                                   Padding="5"
-                                   Height="250"
-                                   Background="#282828" 
-                                   Foreground="White"
-                                   Text="{Binding Result, Mode=TwoWay}"/>
-                    </ScrollViewer>
-                    
-
-                    <TextBlock Text="Input" 
-                               Margin="10 10 10 0"
-                               Foreground="White"/>
-                    <TextBox Margin="10"
-                             Background="#282828" 
-                             Foreground="White"
-                             Text="{Binding Input}">
+            <StackPanel Grid.Column="1">
+                <StackPanel Background="#1f1f1f"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Stretch">
+                    <ComboBox Style="{DynamicResource ComboBoxStyle}" 
+                              Margin="10" 
+                              Height="30"
+                              Padding="10 5 10 5"
+                              Foreground="White"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              ItemsSource="{Binding Languages}" 
+                              SelectedItem="{Binding SelectedLanguage}">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2d2d2d" />
+                        </ComboBox.Resources>
+                    </ComboBox>
+                    <TextBlock Text="Memory limit: "
+                               VerticalAlignment="Center"
+                               Margin="15 0 0 0"/>
+                    <TextBox Text="{Binding MemoryLimit, StringFormat={}{0} Kb}"
+                             Style="{StaticResource InputTextBox}">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="2.5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <TextBlock Text="Time limit: "
+                               VerticalAlignment="Center"
+                               Margin="15 0 0 0"/>
+                    <TextBox Text="{Binding TimeLimit, StringFormat={}{0} s}"
+                             Style="{StaticResource InputTextBox}">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="2.5"/>
@@ -230,7 +150,69 @@
                         </TextBox.Resources>
                     </TextBox>
                 </StackPanel>
-            </Grid>
-        </DockPanel>
+                <DockPanel>
+                    <Button Content="RUN"
+                            HorizontalAlignment="Left"
+                            Width="60"
+                            Height="30"
+                            Margin="10"
+                            Background="#4daffe"
+                            Foreground="White"
+                            BorderThickness="0"
+                            FontWeight="Bold"
+                            Command="{Binding RunCodeCommand}">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="2.5"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <DockPanel HorizontalAlignment="Right"
+                               VerticalAlignment="Center" 
+                               Height="{Binding OutputStats.DockPanelHeight}">
+                        <TextBlock Text="Memory used: "
+                                   Margin="10 10 5 10"/>
+                        <TextBlock Text="{Binding OutputStats.MemoryUsed, StringFormat={}{0} Kb}"
+                                   Margin="0 10 10 10"/>
+
+                        <TextBlock Text="Time used: "
+                                   Margin="10 10 5 10"/>
+                        <TextBlock Text="{Binding OutputStats.TimeUsed, StringFormat={}{0} s}"
+                                   Margin="0 10 10 10"/>
+
+                    </DockPanel>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Output" 
+                               VerticalAlignment="Center"
+                               Margin="10 10 10 0"
+                               Foreground="White"/>
+                    <TextBlock Text="{Binding ExecuteStatus}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Margin="0 0 10 0"/>
+                </DockPanel>
+
+                <TextBlock Margin="10"
+                           Padding="5"
+                           Height="250"
+                           Background="#282828" 
+                           Foreground="White"
+                           Text="{Binding Result, Mode=TwoWay}"/>
+                <TextBlock Text="Input" 
+                           Margin="10 10 10 0"
+                           Foreground="White"/>
+                <TextBox Margin="10"
+                         Background="#282828" 
+                         Foreground="White"
+                         Text="{Binding Input}">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="2.5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+            </StackPanel>
+        </Grid>
     </Border>
 </Window>

@@ -38,7 +38,7 @@ namespace LeetCodeClone
         {
             if (e.DataObject.GetDataPresent(DataFormats.Text))
             {
-                string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
+                string? pastedText = e.DataObject.GetData(DataFormats.Text) as string;
 
                 if (!string.IsNullOrEmpty(pastedText))
                 {
