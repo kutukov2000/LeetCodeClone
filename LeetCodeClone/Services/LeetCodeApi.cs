@@ -8,37 +8,37 @@ namespace LeetCodeClone
     {
         private const string _URI = "https://leetcode.com/api/problems/all/";
         private const string _GraphQLEndpoint = "https://leetcode.com/graphql";
-        public async Task<string> GetProblemDetailAsync(string titleSlug)
+        public async Task<LeetCodeProblemDescription> GetProblemDetailAsync(string titleSlug)
         {
             using (var client = new HttpClient())
             {
                 var requestData = new
                 {
                     query = @"
-                query getQuestionDetail($titleSlug: String!) {
-                    question(titleSlug: $titleSlug) {
-                        questionId
-                        title
-                        difficulty
-                        likes
-                        dislikes
-                        isLiked
-                        isPaidOnly
-                        stats
-                        status
-                        content
-                        topicTags {
-                            name
+                        query getQuestionDetail($titleSlug: String!) {
+                            question(titleSlug: $titleSlug) {
+                                questionId
+                                title
+                                difficulty
+                                likes
+                                dislikes
+                                isLiked
+                                isPaidOnly
+                                stats
+                                status
+                                content
+                                topicTags {
+                                    name
+                                }
+                                codeSnippets {
+                                    lang
+                                    langSlug
+                                    code
+                                }
+                                sampleTestCase
+                            }
                         }
-                        codeSnippets {
-                            lang
-                            langSlug
-                            code
-                        }
-                        sampleTestCase
-                    }
-                }
-            ",
+                    ",
                     variables = new
                     {
                         titleSlug
@@ -53,20 +53,15 @@ namespace LeetCodeClone
 
                 dynamic jsonResponse = JObject.Parse(responseContent);
 
-                string htmlStart = @"<!DOCTYPE html><html><head><style>
-                                  body {
-                                    background-color:#3a3a3a;
-                                    color: white;
-                                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                                  }
-                                </style></head><body>";
-                string htmlEnd = "</body></html>";
-
-                return htmlStart + jsonResponse.data.question.content + htmlEnd;
+                return new LeetCodeProblemDescription
+                {
+                    Title = jsonResponse.data.question.title,
+                    Content = jsonResponse.data.question.content
+                };
             }
         }
 
-        public async Task<List<Problem>> GetProblemsAsync()
+        public async Task<List<LeetCodeProblem>> GetProblemsAsync()
         {
             using (var client = new HttpClient())
             {
@@ -75,15 +70,15 @@ namespace LeetCodeClone
 
                 dynamic responseObject = JObject.Parse(responseContent);
 
-                List<Problem> problems = new List<Problem>();
+                List<LeetCodeProblem> problems = new List<LeetCodeProblem>();
 
-                foreach (var item in responseObject.stat_status_pairs)
+                foreach (var problem in responseObject.stat_status_pairs)
                 {
-                    problems.Add(new Problem
+                    problems.Add(new LeetCodeProblem
                     {
-                        QuestionTitleSlug = item.stat.question__title_slug,
-                        QuestionTitle = item.stat.question__title,
-                        DifficultyLevel = item.difficulty.level
+                        QuestionTitleSlug = problem.stat.question__title_slug,
+                        QuestionTitle = problem.stat.question__title,
+                        DifficultyLevel = problem.difficulty.level
                     });
                 }
                 return problems;

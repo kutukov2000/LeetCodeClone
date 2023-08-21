@@ -3,7 +3,7 @@
 namespace LeetCodeClone
 {
     [AddINotifyPropertyChangedInterface]
-    class OutputStats
+    class HackerEarthOutputStats
     {
         public int MemoryUsed { get; set; }
         public float TimeUsed { get; set; }

@@ -11,8 +11,7 @@
         Width="950"
         WindowStartupLocation="CenterScreen"
         Background="#1a1a1a"
-        Foreground="White"
-        FontSize="13">
+        Foreground="White">
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
@@ -45,9 +44,9 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Ellipse Width="15" 
-                                                         Height="15" 
-                                                         Margin="25 0 0 0"
-                                                         Fill="{Binding DifficultyLevel, Converter={StaticResource DifficultyLevelConverter}}" />
+                                                     Height="15" 
+                                                     Margin="25 0 0 0"
+                                                     Fill="{Binding DifficultyLevel, Converter={StaticResource DifficultyLevelConverter}}" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -85,11 +84,13 @@
                                 </TextBox.Resources>
                             </TextBox>
                         </Border>
-                        <TextBox Text="{Binding SourceCode, UpdateSourceTrigger=PropertyChanged}" 
+
+                        <!--PreviewKeyDown="TextBox_PreviewKeyDown"-->
+                        <TextBox Text="{Binding SourceCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                  x:Name="textBox"
+                                 DataObject.Pasting="TextBox_Pasting"
                                  ScrollViewer.ScrollChanged="textBox_ScrollChanged"
                                  PreviewKeyDown="TextBox_PreviewKeyDown"
-                                 DataObject.Pasting="TextBox_Pasting"
                                  AcceptsTab="True"
                                  Grid.Column="1"
                                  Margin="0 0 10 0" 

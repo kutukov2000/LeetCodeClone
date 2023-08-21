@@ -2,7 +2,7 @@
 
 namespace LeetCodeClone
 {
-    class RequestBody
+    class HackerEarthRequestBody
     {
         [JsonProperty("lang")]
         public required string Lang { get; set; }

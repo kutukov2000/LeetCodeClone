@@ -15,7 +15,7 @@ namespace LeetCodeClone
             _clientSecret = clientSecret;
         }
 
-        public async Task<string> ExecuteCodeAsync(RequestBody data)
+        public async Task<string> ExecuteCodeAsync(HackerEarthRequestBody data)
         {
             using (var client = new HttpClient())
             {
@@ -50,7 +50,7 @@ namespace LeetCodeClone
                 return responseObject.request_status.code;
             }
         }
-        public async Task<OutputStats> GetStatsAsync(string id)
+        public async Task<HackerEarthOutputStats> GetStatsAsync(string id)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -60,7 +60,7 @@ namespace LeetCodeClone
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic responseObject = JObject.Parse(responseContent);
-                return new OutputStats
+                return new HackerEarthOutputStats
                 {
                     MemoryUsed = responseObject.result.run_status.memory_used,
                     TimeUsed = responseObject.result.run_status.time_used,
