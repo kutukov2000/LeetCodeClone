@@ -4,7 +4,7 @@ using System.Windows;
 namespace LeetCodeClone
 {
     [AddINotifyPropertyChangedInterface]
-    partial class MainViewModel
+    class MainViewModel
     {
         private const string _clientSecret = "acc5789876823ef7de80d3a2dd8892bed9cc1b35 ";
         private HackerEarth HackerEarth;
@@ -90,14 +90,16 @@ namespace LeetCodeClone
             while (true)
             {
                 ExecuteStatus = await HackerEarth.GetStatusAsync(id);
-                if (ExecuteStatus == "REQUEST_INITIATED" || ExecuteStatus == "REQUEST_QUEUED" || ExecuteStatus == "CODE_COMPILED")
+                if (ExecuteStatus == RequestStatus.INITIATED ||
+                    ExecuteStatus == RequestStatus.QUEUED ||
+                    ExecuteStatus == RequestStatus.COMPILED)
                     continue;
-                else if (ExecuteStatus == "REQUEST_FAILED")
+                else if (ExecuteStatus == RequestStatus.FAILED)
                 {
                     MessageBox.Show("REQUEST_FAILED");
                     break;
                 }
-                else if (ExecuteStatus == "REQUEST_COMPLETED")
+                else if (ExecuteStatus == RequestStatus.COMPLETED)
                 {
                     string output = await HackerEarth.GetOutputStringAsync(id);
                     Result = await HackerEarth.GetOutputAsync(output);
