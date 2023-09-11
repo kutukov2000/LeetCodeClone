@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LeetCodeClone.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Text;
@@ -15,7 +16,8 @@ namespace LeetCodeClone
             _clientSecret = clientSecret;
         }
 
-        public async Task<string> ExecuteCodeAsync(HackerEarthRequestBody data)
+        //public async Task<string> ExecuteCodeAsync(HackerEarthRequestBody data)
+        public async Task<string> ExecuteCodeAsync(InputStats data)
         {
             using (var client = new HttpClient())
             {
@@ -50,7 +52,7 @@ namespace LeetCodeClone
                 return responseObject.request_status.code;
             }
         }
-        public async Task<HackerEarthOutputStats> GetStatsAsync(string id)
+        public async Task<OutputStats> GetStatsAsync(string id)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -60,7 +62,7 @@ namespace LeetCodeClone
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 dynamic responseObject = JObject.Parse(responseContent);
-                return new HackerEarthOutputStats
+                return new OutputStats
                 {
                     MemoryUsed = responseObject.result.run_status.memory_used,
                     TimeUsed = responseObject.result.run_status.time_used,

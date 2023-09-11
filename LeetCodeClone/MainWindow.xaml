@@ -69,7 +69,7 @@
                                 CornerRadius="2.5 0 0 2.5"
                                 Padding="2.5 2 2.5 2">
                             <TextBox Name="lineNumbers" 
-                                     Text="{Binding LineNumbers}"
+                                     Text="{Binding InputStats.LineNumbers}"
                                      VerticalAlignment="Top" 
                                      HorizontalAlignment="Right" 
                                      Background="#282828" 
@@ -85,8 +85,7 @@
                             </TextBox>
                         </Border>
 
-                        <!--PreviewKeyDown="TextBox_PreviewKeyDown"-->
-                        <TextBox Text="{Binding SourceCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        <TextBox Text="{Binding InputStats.SourceCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                  x:Name="textBox"
                                  DataObject.Pasting="TextBox_Pasting"
                                  ScrollViewer.ScrollChanged="textBox_ScrollChanged"
@@ -122,8 +121,8 @@
                               Foreground="White"
                               VerticalAlignment="Center"
                               VerticalContentAlignment="Center"
-                              ItemsSource="{Binding Languages}" 
-                              SelectedItem="{Binding SelectedLanguage}">
+                              ItemsSource="{Binding InputStats.Languages}" 
+                              SelectedItem="{Binding InputStats.SelectedLanguage}">
                         <ComboBox.Resources>
                             <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2d2d2d" />
                         </ComboBox.Resources>
@@ -131,7 +130,7 @@
                     <TextBlock Text="Memory limit: "
                                VerticalAlignment="Center"
                                Margin="15 0 0 0"/>
-                    <TextBox Text="{Binding MemoryLimit, StringFormat={}{0} Kb}"
+                    <TextBox Text="{Binding InputStats.MemoryLimit, StringFormat={}{0} Kb}"
                              Style="{StaticResource InputTextBox}">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
@@ -142,7 +141,7 @@
                     <TextBlock Text="Time limit: "
                                VerticalAlignment="Center"
                                Margin="15 0 0 0"/>
-                    <TextBox Text="{Binding TimeLimit, StringFormat={}{0} s}"
+                    <TextBox Text="{Binding InputStats.TimeLimit, StringFormat={}{0} s}"
                              Style="{StaticResource InputTextBox}">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
@@ -188,7 +187,7 @@
                                VerticalAlignment="Center"
                                Margin="10 10 10 0"
                                Foreground="White"/>
-                    <TextBlock Text="{Binding ExecuteStatus}"
+                    <TextBlock Text="{Binding OutputStats.ExecuteStatus}"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Right"
                                Margin="0 0 10 0"/>
@@ -199,14 +198,14 @@
                            Height="250"
                            Background="#282828" 
                            Foreground="White"
-                           Text="{Binding Result, Mode=TwoWay}"/>
+                           Text="{Binding OutputStats.Result, Mode=TwoWay}"/>
                 <TextBlock Text="Input" 
                            Margin="10 10 10 0"
                            Foreground="White"/>
                 <TextBox Margin="10"
                          Background="#282828" 
                          Foreground="White"
-                         Text="{Binding Input}">
+                         Text="{Binding InputStats.Input}">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="2.5"/>

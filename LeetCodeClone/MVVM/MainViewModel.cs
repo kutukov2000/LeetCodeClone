@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿using LeetCodeClone.Models;
+using PropertyChanged;
 using System.Windows;
 
 namespace LeetCodeClone
@@ -10,29 +11,9 @@ namespace LeetCodeClone
         private HackerEarth HackerEarth;
         private LeetCodeApi LeetCode;
 
-        public string LineNumbers { get; set; }
-
-        private string? _sourceCode;
-        public string SourceCode
-        {
-            get => _sourceCode;
-            set
-            {
-                _sourceCode = value;
-                UpdateLineNumbers();
-            }
-        }
-
-        public string? ExecuteStatus { get; set; }
-        public string[] Languages { get; }
-        public string SelectedLanguage { get; set; }
-        public string? Input { get; set; }
-        public string? Result { get; set; }
-
-        public int MemoryLimit { get; set; }
-        public int TimeLimit { get; set; }
         public RelayCommand RunCodeCommand { get; }
-        public HackerEarthOutputStats? OutputStats { get; set; }
+        public OutputStats OutputStats { get; set; }
+        public InputStats InputStats { get; set; }
         public List<LeetCodeProblem>? Problems { get; set; }
 
         private LeetCodeProblem? _selectedProblem;
@@ -51,14 +32,10 @@ namespace LeetCodeClone
             HackerEarth = new HackerEarth(_clientSecret);
             LeetCode = new LeetCodeApi();
 
+            InputStats = new InputStats();
+            OutputStats = new OutputStats();
+
             RunCodeCommand = new RelayCommand(o => { RunCode(); });
-
-            Languages = new string[] { "C", "CPP14", "CPP17", "CLOJURE", "CSHARP", "GO", "HASKELL", "JAVA8", "JAVA14", "JAVASCRIPT_NODE", "KOTLIN", "OBJECTIVEC", "PASCAL", "PERL", "PHP", "PYTHON", "PYTHON3", "PYTHON3_8", "R", "RUBY", "RUST", "SCALA", "SWIFT", "TYPESCRIPT" };
-            SelectedLanguage = Languages[17];
-
-            MemoryLimit = 262144;
-            TimeLimit = 5;
-            LineNumbers = "1";
 
             GetProblemsAsync();
         }
@@ -74,62 +51,38 @@ namespace LeetCodeClone
         }
         private async Task RunCode()
         {
-            OutputStats = new HackerEarthOutputStats();
-            ExecuteStatus = string.Empty;
+            OutputStats.ExecuteStatus = string.Empty;
 
-            HackerEarthRequestBody data = new HackerEarthRequestBody
-            {
-                Lang = SelectedLanguage,
-                Source = SourceCode,
-                MemoryLimit = MemoryLimit,
-                TimeLimit = TimeLimit,
-                Input = Input
-            };
-            string id = await HackerEarth.ExecuteCodeAsync(data);
+            string id = await HackerEarth.ExecuteCodeAsync(InputStats);
 
             while (true)
             {
-                ExecuteStatus = await HackerEarth.GetStatusAsync(id);
-                if (ExecuteStatus == RequestStatus.INITIATED ||
-                    ExecuteStatus == RequestStatus.QUEUED ||
-                    ExecuteStatus == RequestStatus.COMPILED)
+                OutputStats.ExecuteStatus = await HackerEarth.GetStatusAsync(id);
+                if (OutputStats.ExecuteStatus == RequestStatus.INITIATED ||
+                    OutputStats.ExecuteStatus == RequestStatus.QUEUED ||
+                    OutputStats.ExecuteStatus == RequestStatus.COMPILED)
                     continue;
-                else if (ExecuteStatus == RequestStatus.FAILED)
+                else if (OutputStats.ExecuteStatus == RequestStatus.FAILED)
                 {
                     MessageBox.Show("REQUEST_FAILED");
                     break;
                 }
-                else if (ExecuteStatus == RequestStatus.COMPLETED)
+                else if (OutputStats.ExecuteStatus == RequestStatus.COMPLETED)
                 {
                     string output = await HackerEarth.GetOutputStringAsync(id);
-                    Result = await HackerEarth.GetOutputAsync(output);
                     OutputStats = await HackerEarth.GetStatsAsync(id);
+                    OutputStats.Result = await HackerEarth.GetOutputAsync(output);
 
-                    if (OutputStats.MemoryUsed > MemoryLimit)
+                    if (OutputStats.MemoryUsed > InputStats.MemoryLimit)
                     {
                         MessageBox.Show("Memory Limit Exceeded");
                     }
-                    if (OutputStats.TimeUsed > TimeLimit)
+                    if (OutputStats.TimeUsed > InputStats.TimeLimit)
                     {
                         MessageBox.Show("Time Limit Exceeded");
                     }
                     break;
                 }
-            }
-        }
-        private void UpdateLineNumbers()
-        {
-            if (string.IsNullOrEmpty(SourceCode))
-            {
-                return;
-            }
-            LineNumbers = string.Empty;
-
-            int lineCount = SourceCode.Split('\n').Length;
-
-            for (int i = 1; i <= lineCount; i++)
-            {
-                LineNumbers += i + "\n";
             }
         }
     }
