@@ -1,4 +1,5 @@
-﻿using LeetCodeClone.Models;
+﻿using HackerEarthApi.JsonModels;
+using LeetCodeClone.Models;
 using PropertyChanged;
 using System.Windows;
 
@@ -7,8 +8,6 @@ namespace LeetCodeClone
     [AddINotifyPropertyChangedInterface]
     class MainViewModel
     {
-        private const string _clientSecret = "acc5789876823ef7de80d3a2dd8892bed9cc1b35 ";
-        private HackerEarth HackerEarth;
         private LeetCodeApi LeetCode;
 
         public RelayCommand RunCodeCommand { get; }
@@ -29,7 +28,6 @@ namespace LeetCodeClone
 
         public MainViewModel()
         {
-            HackerEarth = new HackerEarth(_clientSecret);
             LeetCode = new LeetCodeApi();
 
             InputStats = new InputStats();
@@ -53,11 +51,14 @@ namespace LeetCodeClone
         {
             OutputStats.ExecuteStatus = string.Empty;
 
-            string id = await HackerEarth.ExecuteCodeAsync(InputStats);
+            string id = await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
 
             while (true)
             {
-                OutputStats.ExecuteStatus = await HackerEarth.GetStatusAsync(id);
+                HackerEarthApiOutput hackerEarthApiOutput = await HackerEarth.GetHackerEarthApiOutput(id);
+
+                OutputStats.SetOutputStats(hackerEarthApiOutput);
+
                 if (OutputStats.ExecuteStatus == RequestStatus.INITIATED ||
                     OutputStats.ExecuteStatus == RequestStatus.QUEUED ||
                     OutputStats.ExecuteStatus == RequestStatus.COMPILED)
@@ -69,9 +70,7 @@ namespace LeetCodeClone
                 }
                 else if (OutputStats.ExecuteStatus == RequestStatus.COMPLETED)
                 {
-                    string output = await HackerEarth.GetOutputStringAsync(id);
-                    OutputStats = await HackerEarth.GetStatsAsync(id);
-                    OutputStats.Result = await HackerEarth.GetOutputAsync(output);
+                    OutputStats.Result = await HackerEarth.GetOutputAsync(hackerEarthApiOutput.OutputString);
 
                     if (OutputStats.MemoryUsed > InputStats.MemoryLimit)
                     {

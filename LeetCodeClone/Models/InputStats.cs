@@ -1,34 +1,29 @@
-﻿using Newtonsoft.Json;
+﻿using HackerEarthApi.JsonModels;
 using PropertyChanged;
 
 namespace LeetCodeClone.Models
 {
     [AddINotifyPropertyChangedInterface]
-    class InputStats
+    public class InputStats
     {
-        [JsonIgnore]
         private string? _sourceCode;
-        [JsonProperty("source")]
         public string SourceCode
         {
-            get => _sourceCode;
+            get
+            {
+                return _sourceCode;
+            }
             set
             {
                 _sourceCode = value;
                 UpdateLineNumbers();
             }
         }
-        [JsonIgnore]
         public string LineNumbers { get; set; }
-        [JsonIgnore]
         public string[] Languages { get; }
-        [JsonProperty("lang")]
         public string SelectedLanguage { get; set; }
-        [JsonProperty("memory_limit")]
         public int MemoryLimit { get; set; }
-        [JsonProperty("time_limit")]
         public int TimeLimit { get; set; }
-        [JsonProperty("input")]
         public string? Input { get; set; }
         public InputStats()
         {
@@ -39,6 +34,17 @@ namespace LeetCodeClone.Models
 
             MemoryLimit = 262144;
             TimeLimit = 5;
+        }
+        public RequestBody ToRequestBody()
+        {
+            return new RequestBody
+            {
+                Language = this.SelectedLanguage,
+                Source = this.SourceCode,
+                Input = this.Input,
+                MemoryLimit = this.MemoryLimit,
+                TimeLimit = this.TimeLimit
+            };
         }
         private void UpdateLineNumbers()
         {

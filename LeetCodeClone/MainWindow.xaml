@@ -167,9 +167,9 @@
                             </Style>
                         </Button.Resources>
                     </Button>
+
                     <DockPanel HorizontalAlignment="Right"
-                               VerticalAlignment="Center" 
-                               Height="{Binding OutputStats.DockPanelHeight}">
+                               VerticalAlignment="Center" >
                         <TextBlock Text="Memory used: "
                                    Margin="10 10 5 10"/>
                         <TextBlock Text="{Binding OutputStats.MemoryUsed, StringFormat={}{0} Kb}"

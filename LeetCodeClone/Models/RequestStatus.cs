@@ -1,4 +1,4 @@
-﻿namespace LeetCodeClone
+﻿namespace LeetCodeClone.Models
 {
     class RequestStatus
     {
