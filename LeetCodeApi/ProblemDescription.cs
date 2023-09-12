@@ -1,6 +1,6 @@
 ﻿namespace LeetCodeClone
 {
-    class LeetCodeProblemDescription
+    public class ProblemDescription
     {
         private const string _htmlStart = @"<!DOCTYPE html><html><head><style>
                                   body {

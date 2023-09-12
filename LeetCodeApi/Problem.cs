@@ -3,12 +3,11 @@
 namespace LeetCodeClone
 {
     [AddINotifyPropertyChangedInterface]
-    class LeetCodeProblem
+    public class Problem
     {
         public required string QuestionTitleSlug { get; set; }
         public required string QuestionTitle { get; set; }
         public int DifficultyLevel { get; set; }
-        public LeetCodeProblemDescription? Description { get; set; }
-        //public string? Description { get; set; }
+        public ProblemDescription? Description { get; set; }
     }
 }

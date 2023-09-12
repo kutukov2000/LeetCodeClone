@@ -8,15 +8,13 @@ namespace LeetCodeClone
     [AddINotifyPropertyChangedInterface]
     class MainViewModel
     {
-        private LeetCodeApi LeetCode;
-
         public RelayCommand RunCodeCommand { get; }
         public OutputStats OutputStats { get; set; }
         public InputStats InputStats { get; set; }
-        public List<LeetCodeProblem>? Problems { get; set; }
+        public List<Problem>? Problems { get; set; }
 
-        private LeetCodeProblem? _selectedProblem;
-        public LeetCodeProblem SelectedProblem
+        private Problem? _selectedProblem;
+        public Problem SelectedProblem
         {
             get => _selectedProblem;
             set
@@ -28,8 +26,6 @@ namespace LeetCodeClone
 
         public MainViewModel()
         {
-            LeetCode = new LeetCodeApi();
-
             InputStats = new InputStats();
             OutputStats = new OutputStats();
 

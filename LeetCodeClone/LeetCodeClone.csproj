@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HackerEarthApi\HackerEarthApi.csproj" />
+    <ProjectReference Include="..\LeetCodeApi\LeetCodeApi.csproj" />
   </ItemGroup>
 
 </Project>
