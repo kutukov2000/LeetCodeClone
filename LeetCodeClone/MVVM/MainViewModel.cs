@@ -55,29 +55,32 @@ namespace LeetCodeClone
 
                 OutputStats.SetOutputStats(hackerEarthApiOutput);
 
-                if (OutputStats.ExecuteStatus == RequestStatus.INITIATED ||
-                    OutputStats.ExecuteStatus == RequestStatus.QUEUED ||
-                    OutputStats.ExecuteStatus == RequestStatus.COMPILED)
-                    continue;
-                else if (OutputStats.ExecuteStatus == RequestStatus.FAILED)
+                switch (OutputStats.ExecuteStatus)
                 {
-                    MessageBox.Show("REQUEST_FAILED");
-                    break;
-                }
-                else if (OutputStats.ExecuteStatus == RequestStatus.COMPLETED)
-                {
-                    OutputStats.Result = await HackerEarth.GetOutputAsync(hackerEarthApiOutput.OutputString);
+                    case RequestStatus.INITIATED:
+                    case RequestStatus.QUEUED:
+                    case RequestStatus.COMPILED: continue;
 
-                    if (OutputStats.MemoryUsed > InputStats.MemoryLimit)
-                    {
-                        MessageBox.Show("Memory Limit Exceeded");
-                    }
-                    if (OutputStats.TimeUsed > InputStats.TimeLimit)
-                    {
-                        MessageBox.Show("Time Limit Exceeded");
-                    }
-                    break;
+                    case RequestStatus.FAILED:
+                        MessageBox.Show("REQUEST_FAILED");
+                        return;
+
+                    case RequestStatus.COMPLETED:
+                        OutputStats.Result = await HackerEarth.GetOutputAsync(hackerEarthApiOutput.OutputString);
+                        CheckLimits();
+                        return;
                 }
+            }
+        }
+        private void CheckLimits()
+        {
+            if (OutputStats.MemoryUsed > InputStats.MemoryLimit)
+            {
+                MessageBox.Show("Memory Limit Exceeded");
+            }
+            if (OutputStats.TimeUsed > InputStats.TimeLimit)
+            {
+                MessageBox.Show("Time Limit Exceeded");
             }
         }
     }

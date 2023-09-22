@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeetCodeClone"
         mc:Ignorable="d"
-        Title="MainWindow" 
+        Title="LeetCodeClone" 
         MinHeight="525"
         Height="525"
         Width="950"
@@ -30,8 +30,7 @@
             </Grid.ColumnDefinitions>
 
             <TabControl Background="#1a1a1a"
-                        BorderThickness="0"
-                        Margin="0 25 0 0">
+                        BorderThickness="0">
                 <TabItem Header="Problems">
                     <ListView ItemsSource="{Binding Problems}" 
                               SelectedItem="{Binding SelectedProblem, UpdateSourceTrigger=PropertyChanged}"
@@ -169,7 +168,7 @@
                     </Button>
 
                     <DockPanel HorizontalAlignment="Right"
-                               VerticalAlignment="Center" >
+                               VerticalAlignment="Center">
                         <TextBlock Text="Memory used: "
                                    Margin="10 10 5 10"/>
                         <TextBlock Text="{Binding OutputStats.MemoryUsed, StringFormat={}{0} Kb}"
