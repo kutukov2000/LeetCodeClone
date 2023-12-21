@@ -32,7 +32,7 @@ namespace LeetCodeClone
             MessageBox.Show("Request Failed!");
             return null;
         }
-        public static async Task<HackerEarthApiOutput> GeеOutputStatsAsync(string id)
+        public static async Task<HackerEarthApiOutput> GetOutputStatsAsync(string id)
         {
             var response = await _httpClient.GetAsync(_codeEvaluationURL + id);
 
