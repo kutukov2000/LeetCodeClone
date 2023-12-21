@@ -35,7 +35,7 @@ namespace LeetCodeClone
             return HandleResponse(response).Result;
         }
 
-        public static async Task<string> GetOutputAsync(string outputURL)
+        public static async Task<string> GetOutputStringAsync(string outputURL)
         {
             var response = await _httpClient.GetAsync(outputURL);
             var content = await response.Content.ReadAsStringAsync();

@@ -84,7 +84,7 @@ namespace LeetCodeClone
                         return;
 
                     case RequestStatus.COMPLETED:
-                        OutputStats.Result = await HackerEarth.GetOutputAsync(hackerEarthApiOutput.OutputString);
+                        OutputStats.Result = await HackerEarth.GetOutputStringAsync(hackerEarthApiOutput.OutputString);
                         CheckLimits();
                         LoadingButtonVisibility = Visibility.Collapsed;
                         return;
