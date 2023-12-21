@@ -29,8 +29,12 @@ namespace LeetCodeClone
                 HackerEarthApiOutput responseObject = JsonConvert.DeserializeObject<HackerEarthApiOutput>(responseContent);
                 return responseObject.Id;
             }
-            MessageBox.Show("Request Failed!");
-            return null;
+            else
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                throw new Exception(JsonConvert.DeserializeObject<ErrorMessage>(responseContent).Message);
+            }
         }
         public static async Task<HackerEarthApiOutput> GetOutputStatsAsync(string id)
         {

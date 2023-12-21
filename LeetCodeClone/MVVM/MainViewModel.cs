@@ -53,7 +53,18 @@ namespace LeetCodeClone
 
             OutputStats.ExecuteStatus = string.Empty;
 
-            string id = await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
+            string id = string.Empty;
+
+            try
+            {
+                id = await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LoadingButtonVisibility = Visibility.Collapsed;
+                return;
+            }
 
             while (true)
             {
