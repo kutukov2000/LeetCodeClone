@@ -9,10 +9,12 @@ namespace LeetCodeClone
         private const string _URI = "https://leetcode.com/api/problems/all/";
         private const string _GraphQLEndpoint = "https://leetcode.com/graphql";
         private static readonly HttpClient _httpClient;
+
         static LeetCode()
         {
             _httpClient = new HttpClient();
         }
+
         public static async Task<ProblemDescription> GetProblemDetailAsync(string titleSlug)
         {
             var requestData = new
@@ -44,6 +46,7 @@ namespace LeetCodeClone
                 Content = jsonResponse.data.question.content
             };
         }
+
         public static async Task<List<Problem>> GetProblemsAsync()
         {
             var response = await _httpClient.GetAsync(_URI);
