@@ -9,12 +9,15 @@ namespace LeetCodeClone
     {
         private const string _codeEvaluationURL = "https://api.hackerearth.com/v4/partner/code-evaluation/submissions/";
         private const string _clientSecret = "acc5789876823ef7de80d3a2dd8892bed9cc1b35 ";
+
         private static readonly HttpClient _httpClient;
+
         static HackerEarth()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("client-secret", _clientSecret);
         }
+
         public static async Task<string?> ExecuteCodeAsync(RequestBody data)
         {
             var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8);
@@ -24,12 +27,14 @@ namespace LeetCodeClone
 
             return HandleResponse(response).Result.Id;
         }
+
         public static async Task<HackerEarthApiOutput> GetOutputStatsAsync(string id)
         {
             var response = await _httpClient.GetAsync(_codeEvaluationURL + id);
 
             return HandleResponse(response).Result;
         }
+
         public static async Task<string> GetOutputAsync(string outputURL)
         {
             var response = await _httpClient.GetAsync(outputURL);
