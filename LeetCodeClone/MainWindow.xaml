@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:local="clr-namespace:LeetCodeClone"
         mc:Ignorable="d"
         Title="LeetCodeClone" 
@@ -150,8 +151,7 @@
                     </TextBox>
                 </StackPanel>
                 <DockPanel>
-                    <Button Content="RUN"
-                            HorizontalAlignment="Left"
+                    <Button HorizontalAlignment="Left"
                             Width="60"
                             Height="30"
                             Margin="10"
@@ -165,6 +165,17 @@
                                 <Setter Property="CornerRadius" Value="2.5"/>
                             </Style>
                         </Button.Resources>
+                        <StackPanel HorizontalAlignment="Center">
+                            <fa:ImageAwesome Icon="CircleOutlineNotch" 
+                                             Spin="True" 
+                                             SpinDuration="2" 
+                                             Foreground="White"
+                                             Height="20" 
+                                             Width="20" 
+                                             Margin="0 4 0 0"
+                                             Visibility="{Binding LoadingButtonVisibility}"/>
+                            <TextBlock Visibility="Visible"><Run Text="RUN"/></TextBlock>
+                        </StackPanel>
                     </Button>
 
                     <DockPanel HorizontalAlignment="Right"

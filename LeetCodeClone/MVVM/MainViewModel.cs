@@ -8,6 +8,8 @@ namespace LeetCodeClone
     [AddINotifyPropertyChangedInterface]
     class MainViewModel
     {
+        public Visibility LoadingButtonVisibility { get; set; }
+
         public RelayCommand RunCodeCommand { get; }
         public OutputStats OutputStats { get; set; }
         public InputStats InputStats { get; set; }
@@ -26,6 +28,8 @@ namespace LeetCodeClone
 
         public MainViewModel()
         {
+            LoadingButtonVisibility = Visibility.Collapsed;
+
             InputStats = new InputStats();
             OutputStats = new OutputStats();
 
@@ -45,6 +49,8 @@ namespace LeetCodeClone
         }
         private async Task RunCode()
         {
+            LoadingButtonVisibility = Visibility.Visible;
+
             OutputStats.ExecuteStatus = string.Empty;
 
             string id = await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
@@ -63,11 +69,13 @@ namespace LeetCodeClone
 
                     case RequestStatus.FAILED:
                         MessageBox.Show("REQUEST_FAILED");
+                        LoadingButtonVisibility = Visibility.Collapsed;
                         return;
 
                     case RequestStatus.COMPLETED:
                         OutputStats.Result = await HackerEarth.GetOutputAsync(hackerEarthApiOutput.OutputString);
                         CheckLimits();
+                        LoadingButtonVisibility = Visibility.Collapsed;
                         return;
                 }
             }
