@@ -36,23 +36,19 @@ namespace LeetCodeClone
             var content = new StringContent(requestDataString, System.Text.Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(_GraphQLEndpoint, content);
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            dynamic jsonResponse = JObject.Parse(responseContent);
+            dynamic responseObject = await HandleResponse(response);
 
             return new ProblemDescription
             {
-                Title = jsonResponse.data.question.title,
-                Content = jsonResponse.data.question.content
+                Title = responseObject.data.question.title,
+                Content = responseObject.data.question.content
             };
         }
 
         public static async Task<List<Problem>> GetProblemsAsync()
         {
             var response = await _httpClient.GetAsync(_URI);
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            dynamic responseObject = JObject.Parse(responseContent);
+            dynamic responseObject = await HandleResponse(response);
 
             List<Problem> problems = new List<Problem>();
 
@@ -72,6 +68,12 @@ namespace LeetCodeClone
                 });
             }
             return problems;
+        }
+
+        private static async Task<dynamic> HandleResponse(HttpResponseMessage response)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return JObject.Parse(responseContent);
         }
     }
 }
