@@ -51,7 +51,7 @@ namespace LeetCodeClone
 
             while (true)
             {
-                HackerEarthApiOutput hackerEarthApiOutput = await HackerEarth.GetHackerEarthApiOutput(id);
+                HackerEarthApiOutput hackerEarthApiOutput = await HackerEarth.GeеOutputStatsAsync(id);
 
                 OutputStats.SetOutputStats(hackerEarthApiOutput);
 
