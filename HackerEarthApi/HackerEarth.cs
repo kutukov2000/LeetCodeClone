@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
-using System.Windows;
 
 namespace LeetCodeClone
 {
@@ -23,32 +22,13 @@ namespace LeetCodeClone
 
             var response = await _httpClient.PostAsync(_codeEvaluationURL, content);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                HackerEarthApiOutput responseObject = JsonConvert.DeserializeObject<HackerEarthApiOutput>(responseContent);
-                return responseObject.Id;
-            }
-            else
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                throw new Exception(JsonConvert.DeserializeObject<ErrorMessage>(responseContent).Message);
-            }
+            return HandleResponse(response).Result.Id;
         }
         public static async Task<HackerEarthApiOutput> GetOutputStatsAsync(string id)
         {
             var response = await _httpClient.GetAsync(_codeEvaluationURL + id);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                HackerEarthApiOutput responseObject = JsonConvert.DeserializeObject<HackerEarthApiOutput>(responseContent);
-                return responseObject;
-            }
-
-            MessageBox.Show("Request Failed!");
-            return null;
+            return HandleResponse(response).Result;
         }
         public static async Task<string> GetOutputAsync(string outputURL)
         {
@@ -56,6 +36,18 @@ namespace LeetCodeClone
             var content = await response.Content.ReadAsStringAsync();
 
             return content;
+        }
+
+        private static async Task<HackerEarthApiOutput> HandleResponse(HttpResponseMessage response)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(JsonConvert.DeserializeObject<ErrorMessage>(responseContent).Message);
+            }
+
+            return JsonConvert.DeserializeObject<HackerEarthApiOutput>(responseContent);
         }
     }
 }
