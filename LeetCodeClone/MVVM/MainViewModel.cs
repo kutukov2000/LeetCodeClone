@@ -53,11 +53,11 @@ namespace LeetCodeClone
 
             OutputStats.ExecuteStatus = string.Empty;
 
-            string id = string.Empty;
+            string requestId = string.Empty;
 
             try
             {
-                id = await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
+                requestId = await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace LeetCodeClone
 
             while (true)
             {
-                HackerEarthApiOutput hackerEarthApiOutput = await HackerEarth.GetOutputStatsAsync(id);
+                HackerEarthApiOutput hackerEarthApiOutput = await HackerEarth.GetOutputStatsAsync(requestId);
 
                 OutputStats.SetOutputStats(hackerEarthApiOutput);
 
