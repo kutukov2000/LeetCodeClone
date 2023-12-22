@@ -25,14 +25,15 @@ namespace LeetCodeClone
 
             var response = await _httpClient.PostAsync(_codeEvaluationURL, content);
 
-            return HandleResponse(response).Result.Id;
+            var responseContent = await HandleResponse(response);
+            return responseContent.Id;
         }
 
         public static async Task<HackerEarthApiOutput> GetOutputStatsAsync(string id)
         {
             var response = await _httpClient.GetAsync(_codeEvaluationURL + id);
 
-            return HandleResponse(response).Result;
+            return await HandleResponse(response);
         }
 
         public static async Task<string> GetOutputStringAsync(string outputURL)
