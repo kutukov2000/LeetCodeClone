@@ -42,55 +42,70 @@ namespace LeetCodeClone
         {
             SelectedProblem.Description = await LeetCode.GetProblemDetailAsync(SelectedProblem.QuestionTitleSlug);
         }
+
         private async Task GetProblemsAsync()
         {
             Problems = await LeetCode.GetProblemsAsync();
             SelectedProblem = Problems[121];
         }
+
         private async Task RunCode()
         {
             LoadingButtonVisibility = Visibility.Visible;
 
             OutputStats.ExecuteStatus = string.Empty;
 
-            string requestId = string.Empty;
+            string requestId = await SendRequest();
 
+            bool isRequesFinished = false;
+
+            while (!isRequesFinished && requestId is not null)
+            {
+                var hackerEarthApiOutput = await HackerEarth.GetOutputStatsAsync(requestId);
+
+                OutputStats.SetOutputStats(hackerEarthApiOutput);
+
+                isRequesFinished = await HandleRequest(hackerEarthApiOutput);
+            }
+        }
+
+        private async Task<string?> SendRequest()
+        {
             try
             {
-                requestId = await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
+                return await HackerEarth.ExecuteCodeAsync(InputStats.ToRequestBody());
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 LoadingButtonVisibility = Visibility.Collapsed;
-                return;
-            }
-
-            while (true)
-            {
-                HackerEarthApiOutput hackerEarthApiOutput = await HackerEarth.GetOutputStatsAsync(requestId);
-
-                OutputStats.SetOutputStats(hackerEarthApiOutput);
-
-                switch (OutputStats.ExecuteStatus)
-                {
-                    case RequestStatus.INITIATED:
-                    case RequestStatus.QUEUED:
-                    case RequestStatus.COMPILED: continue;
-
-                    case RequestStatus.FAILED:
-                        MessageBox.Show("REQUEST_FAILED");
-                        LoadingButtonVisibility = Visibility.Collapsed;
-                        return;
-
-                    case RequestStatus.COMPLETED:
-                        OutputStats.Result = await HackerEarth.GetOutputStringAsync(hackerEarthApiOutput.OutputString);
-                        CheckLimits();
-                        LoadingButtonVisibility = Visibility.Collapsed;
-                        return;
-                }
+                return null;
             }
         }
+
+        private async Task<bool> HandleRequest(HackerEarthApiOutput hackerEarthApiOutput)
+        {
+            switch (OutputStats.ExecuteStatus)
+            {
+                case RequestStatus.INITIATED:
+                case RequestStatus.QUEUED:
+                case RequestStatus.COMPILED: return false;
+
+                case RequestStatus.FAILED:
+                    MessageBox.Show("REQUEST_FAILED");
+                    LoadingButtonVisibility = Visibility.Collapsed;
+                    return true;
+
+                case RequestStatus.COMPLETED:
+                    OutputStats.Result = await HackerEarth.GetOutputStringAsync(hackerEarthApiOutput.OutputString);
+                    CheckLimits();
+                    LoadingButtonVisibility = Visibility.Collapsed;
+                    return true;
+            }
+
+            return false;
+        }
+
         private void CheckLimits()
         {
             if (OutputStats.MemoryUsed > InputStats.MemoryLimit)
